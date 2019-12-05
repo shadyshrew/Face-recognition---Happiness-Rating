@@ -6,14 +6,13 @@ import os
 import datetime
 import sys
 
-def main(haarcascade, video_location, model_json, facial_rec_weights):    
+def main(haarcascade, video_location, model_json, facial_rec_weights,session_id):    
     
     #-----------File locations-----------#
     
     
     #session_id = str(sys.argv[1])
-    session_id = '123_1_1572972352'
-    videopath = "../Sessions/" + session_id + "/session_data/subject_media/video/"
+    videopath = "../Sessions/" + session_id + "/session_data/subject_media/processedVideos/"
     modelPath = '../Models/Video/'
     savePath = "../Sessions/" + session_id + "/analysis_data/"
     analysis_filename = "video_analysis_subject.txt"
@@ -71,7 +70,7 @@ def main(haarcascade, video_location, model_json, facial_rec_weights):
                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 faces = face_cascade.detectMultiScale(gray, 1.3, 5)
                 for (x,y,w,h) in faces:
-                    cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2) #draw rectangle to main image
+                    cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2) #draw rectangle to main image
                     detected_face = img[int(y):int(y+h), int(x):int(x+w)] #crop detected face
                     detected_face = cv2.cvtColor(detected_face, cv2.COLOR_BGR2GRAY) #transform to gray scale
                     detected_face = cv2.resize(detected_face, (48, 48)) #resize to 48x48
@@ -103,7 +102,7 @@ def main(haarcascade, video_location, model_json, facial_rec_weights):
                 #--------------Display Video----------------#
                 #---------Display video feed ----------------#
                 #cv2.putText(img, str(t), (int(x), int(y)), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.9, (255,255,255), 2)		
-                cv2.putText(img, str(preds[:5]), (int(x), int(y+h)), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.9, (255,255,255), 2)
+                cv2.putText(img, str(float(preds[:5])*100)[:5]+'% Happy', (int(x), int(y+h)), cv2.FONT_HERSHEY_PLAIN, 0.9, (255,255,255), 1)
                 #--------------------------------------------#
                 cv2.imshow('img',img)
                 
@@ -137,8 +136,8 @@ if __name__ == "__main__":
     model_json = "facial_expression_model_structure.json"
     facial_rec_weights = "facial_expression_model_weights.h5"
     output_text = "happy.txt"
-    
+    session_id = '123_1_1572972352'
     
     #-------------end------------#
     
-    main(haarcascade, video_location, model_json, facial_rec_weights)
+    main(haarcascade, video_location, model_json, facial_rec_weights,session_id)
